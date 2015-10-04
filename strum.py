@@ -15,7 +15,6 @@ def keypress_handler(ch):
         print("Exiting Example...", end="\r\n");
         exit_requested = True;
 
-
 def openSensorReadContacts():
     sensel_device = sensel.SenselDevice()
 
@@ -103,7 +102,7 @@ def openSensorReadContacts():
                 print ("Strumming: %s" %(stringToStrum), end="\r\n")
                 print ("Note To Play: %s" %(someNote), end="\r\n")
                 FNULL = open(os.devnull, 'w')
-                retcode = Popen("play " + play(someNote, force), shell=True, stdin=PIPE, stdout=PIPE, stderr=FNULL)
+                retcode = Popen("play " + play(someNote, force, 1), shell=True, stdin=PIPE, stdout=PIPE, stderr=FNULL)
 
         #     notesToPlay = []
         # else :
@@ -127,4 +126,5 @@ def openSensorReadContacts():
     keyboardReadThreadStop()
 
 if __name__ == "__main__":
+
     openSensorReadContacts()

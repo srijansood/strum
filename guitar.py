@@ -6,8 +6,8 @@ def isstring(c):
 def isfret(c):
     return (71 <= c.y_pos_mm <= 116)
 
-def play(s, f):
-    return "\"|sox -n -p synth 1 pl " + s + "  vol " + str(f) + "\""
+def play(s, f, length):
+    return "\"|sox -n -p synth " + str(length) + " pl " + s + "  vol " + str(f) + " spectrogram\""
 
 def strings(c):
     stringPlayed = ""
