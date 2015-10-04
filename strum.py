@@ -1,35 +1,7 @@
-#!/usr/bin/env python
-
-##########################################################################
-# Copyright 2015 Sensel, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-##########################################################################
-
-#
-#  Read Contacts
-#  by Aaron Zarraga - Sensel, Inc
-#
-#  This opens a Sensel sensor, reads contact data, and prints the data to the console.
-#
-#  Note: We have to use \r\n explicitly for print endings because the keyboard reading code
-#        needs to set the terminal to "raw" mode.
-##
-
 from __future__ import print_function
 from keyboard_reader import *
 import sensel
-from guitar import strings, isfret, isstring, fretFor
+from guitar import strings, isfret, isstring, fretFor, fretNumber
 
 exit_requested = False;
 
@@ -56,7 +28,7 @@ def openSensorReadContacts():
     #Enable scanning
     sensel_device.startScanning()
 
-    print("\r\nTouch sensor! (press 'q' to quit)...", end="\r\n")
+    print("\r\nStart strumming!", end="\r\n")
 
     while not exit_requested:
         contacts = sensel_device.readContacts()
@@ -80,9 +52,9 @@ def openSensorReadContacts():
                 event = "error";
 
             if isstring(c):
-                print("~~ String   : %s", strings(c))
+                print("~~ String: %s" %(strings(c)), end="\r\n")
             elif isfret(c):
-                print("~~ Fret for : %s", fretFor(c))
+                print("~~ Fret: %s%d" %(fretFor(c), fretNumber(c)), end="\r\n")
 
             print("Contact ID %d, event=%s, mm coord: (%f, %f), force=%d, "
                   "major=%f, minor=%f, orientation=%f" %

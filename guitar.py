@@ -4,6 +4,9 @@ def isstring(c):
 def isfret(c):
     return (71 <= c.y_pos_mm <= 116)
 
+# def play(s):
+#     return "|sox -n -p synth .5 pl E"
+
 def strings(c):
     stringPlayed = ""
     if (15 <= c.y_pos_mm < 22.5):
@@ -40,3 +43,47 @@ def fretFor(c):
     else:
         fretFor = "none"
     return fretFor
+
+def fretNumber(c):
+    fretNum = 0
+    if (5 <= c.x_pos_mm < 20):
+        fretNum = 20
+    elif (20 <= c.x_pos_mm < 35):
+        fretNum = 19
+    elif (35 <= c.x_pos_mm < 48):
+        fretNum = 18
+    elif (48 <= c.x_pos_mm < 61):
+        fretNum = 17
+    elif (61 <= c.x_pos_mm < 73):
+        fretNum = 16
+    elif (73 <= c.x_pos_mm < 85):
+        fretNum = 15
+    elif (85 <= c.x_pos_mm < 97):
+        fretNum = 14
+    elif (97 <= c.x_pos_mm < 107):
+        fretNum = 13
+    elif (107 <= c.x_pos_mm < 116):
+        fretNum = 12
+    elif (116 <= c.x_pos_mm < 125):
+        fretNum = 11
+    elif (125 <= c.x_pos_mm < 134):
+        fretNum = 10
+    elif (134 <= c.x_pos_mm < 143):
+        fretNum = 9
+    elif (143 <= c.x_pos_mm < 152):
+        fretNum = 8
+    elif (152 <= c.x_pos_mm < 161):
+        fretNum = 7
+    elif (161 <= c.x_pos_mm < 170):
+        fretNum = 6
+    elif (170 <= c.x_pos_mm < 179):
+        fretNum = 5
+    elif (179 <= c.x_pos_mm < 188):
+        fretNum = 4
+    elif (188 <= c.x_pos_mm < 197):
+        fretNum = 3
+    elif (197 <= c.x_pos_mm < 206):
+        fretNum = 2
+    elif (206 <= c.x_pos_mm < 216):
+        fretNum = 1
+    return fretNum
