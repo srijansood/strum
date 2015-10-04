@@ -1,7 +1,8 @@
 from __future__ import print_function
 from keyboard_reader import *
 import sensel
-from guitar import strings, isfret, isstring, fretFor, fretNumber
+from subprocess import Popen, PIPE
+from guitar import *
 
 exit_requested = False;
 
@@ -51,10 +52,23 @@ def openSensorReadContacts():
             else:
                 event = "error";
 
+            doProcessing = False
             if isstring(c):
                 print("~~ String: %s" %(strings(c)), end="\r\n")
-            elif isfret(c):
+                doProcessing = True
+            if isfret(c):
                 print("~~ Fret: %s%d" %(fretFor(c), fretNumber(c)), end="\r\n")
+                doProcessing = True
+            if doProcessing:
+                if isfret(c) & fretNumber(c)!=0:
+                    fretCombo = fretFor(c) + str(fretNumber(c))
+                else:
+                    fretCombo = strings(c)
+                force = forceConvert(c)
+                print("Command is play ", play(fretCombo, force))
+
+                if event != "end":
+                    Popen("play " + play(fretCombo, force), shell=True, stdin=PIPE, stdout=PIPE)
 
             print("Contact ID %d, event=%s, mm coord: (%f, %f), force=%d, "
                   "major=%f, minor=%f, orientation=%f" %

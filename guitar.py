@@ -4,8 +4,8 @@ def isstring(c):
 def isfret(c):
     return (71 <= c.y_pos_mm <= 116)
 
-# def play(s):
-#     return "|sox -n -p synth .5 pl E"
+def play(s, f):
+    return "\"|sox -n -p synth 1 pl " + s + "  vol " + str(f) + "\""
 
 def strings(c):
     stringPlayed = ""
@@ -24,7 +24,6 @@ def strings(c):
     else:
         stringPlayed = "none"
     return stringPlayed
-
 
 def fretFor(c):
     fretFor = ""
@@ -46,7 +45,9 @@ def fretFor(c):
 
 def fretNumber(c):
     fretNum = 0
-    if (5 <= c.x_pos_mm < 20):
+    if (isstring(c)):
+        fretNum = 0
+    elif (5 <= c.x_pos_mm < 20):
         fretNum = 20
     elif (20 <= c.x_pos_mm < 35):
         fretNum = 19
@@ -87,3 +88,20 @@ def fretNumber(c):
     elif (206 <= c.x_pos_mm < 216):
         fretNum = 1
     return fretNum
+
+def forceConvert(c):
+    if (c.total_force < 300):
+        return 1
+    elif (c.total_force < 600):
+        return 2
+    elif (c.total_force < 900):
+        return 2.4
+    elif (c.total_force < 1200):
+        return 2.8
+    elif (c.total_force < 2500):
+        return 3.4
+    elif (c.total_force < 3000):
+        return 3.8
+    elif (c.total_force >= 3000):
+        return 4.5
+    return 1
