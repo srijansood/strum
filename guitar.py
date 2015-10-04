@@ -38,7 +38,7 @@ def fretFor(c):
     elif (100 <= c.y_pos_mm < 107.5):
         fretFor = "B"
     elif (107.5 <= c.y_pos_mm < 116):
-        fretFor = "E"
+        fretFor = "E2"
     else:
         fretFor = "none"
     return fretFor
