@@ -1,3 +1,6 @@
+# from flask import Flask
+# app = Flask(__name__)
+
 from __future__ import print_function
 from keyboard_reader import *
 import sensel
@@ -126,5 +129,5 @@ def openSensorReadContacts():
     keyboardReadThreadStop()
 
 if __name__ == "__main__":
-
     openSensorReadContacts()
+    #app.run()
