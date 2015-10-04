@@ -6,9 +6,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 # http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,7 @@
 #
 #  Read Contacts
 #  by Aaron Zarraga - Sensel, Inc
-# 
+#
 #  This opens a Sensel sensor, reads contact data, and prints the data to the console.
 #
 #  Note: We have to use \r\n explicitly for print endings because the keyboard reading code
@@ -29,6 +29,7 @@
 from __future__ import print_function
 from keyboard_reader import *
 import sensel
+from guitar import strings, isfret, isstring, fretFor
 
 exit_requested = False;
 
@@ -51,22 +52,22 @@ def openSensorReadContacts():
 
     #Enable contact sending
     sensel_device.setFrameContentControl(sensel.SENSEL_FRAME_CONTACTS_FLAG)
-  
+
     #Enable scanning
     sensel_device.startScanning()
 
     print("\r\nTouch sensor! (press 'q' to quit)...", end="\r\n")
 
-    while not exit_requested: 
+    while not exit_requested:
         contacts = sensel_device.readContacts()
-  
+
         if len(contacts) == 0:
             continue
-   
+
         for c in contacts:
             event = ""
             if c.type == sensel.SENSEL_EVENT_CONTACT_INVALID:
-                event = "invalid"; 
+                event = "invalid";
             elif c.type == sensel.SENSEL_EVENT_CONTACT_START:
                 sensel_device.setLEDBrightness(c.id, 100) #Turn on LED
                 event = "start"
@@ -77,10 +78,15 @@ def openSensorReadContacts():
                 event = "end";
             else:
                 event = "error";
-    
-            print("Contact ID %d, event=%s, mm coord: (%f, %f), force=%d, " 
-                  "major=%f, minor=%f, orientation=%f" % 
-                  (c.id, event, c.x_pos_mm, c.y_pos_mm, c.total_force, 
+
+            if isstring(c):
+                print("~~ String   : %s", strings(c))
+            elif isfret(c):
+                print("~~ Fret for : %s", fretFor(c))
+
+            print("Contact ID %d, event=%s, mm coord: (%f, %f), force=%d, "
+                  "major=%f, minor=%f, orientation=%f" %
+                  (c.id, event, c.x_pos_mm, c.y_pos_mm, c.total_force,
                    c.major_axis_mm, c.minor_axis_mm, c.orientation_degrees), end="\r\n")
 
         if len(contacts) > 0:
@@ -92,4 +98,3 @@ def openSensorReadContacts():
 
 if __name__ == "__main__":
     openSensorReadContacts()
-    
