@@ -33,12 +33,20 @@ def openSensorReadContacts():
 
     print("\r\nStart strumming!", end="\r\n")
 
+    # fretsBool = (False, ) * 20 #start at none pressed
+    # numFrets = 0
     while not exit_requested:
         contacts = sensel_device.readContacts()
 
         if len(contacts) == 0:
             continue
 
+        fretsPressed = []
+        fretCombo = []
+        stringsStrummed = []
+        forces = []
+        toStrum = False
+        stringToStrum = "none"
         for c in contacts:
             event = ""
             if c.type == sensel.SENSEL_EVENT_CONTACT_INVALID:
@@ -54,35 +62,66 @@ def openSensorReadContacts():
             else:
                 event = "error";
 
-            doProcessing = False
+            # if isstring(c):
+            #     print("~~ String: %s" %(strings(c)), end="\r\n")
+
+            #which frets are pressed
+            if isfret(c):
+                fretnum = fretNumber(c)
+                fretisfor = fretFor(c)
+                if fretnum != 0:
+                    fretsPressed.append(fretnum)
+                    fretCombo.append(fretisfor + "-" + str(fretnum))
+
+            #which string
             if isstring(c):
-                print("~~ String: %s" %(strings(c)), end="\r\n")
-                doProcessing = True
-            print("~~ Fret: For-%s Num-%d" %(fretFor(c), fretNumber(c)), end="\r\n")
+                stringToStrum = strings(c)
+                if stringToStrum != "none":
+                    toStrum = True
+                    force = forceConvert(c)
+                    # stringsStrummed.append(strn)
+                    # forces.append(forceConvert(c))
 
-            if doProcessing:
-                # if isfret(c) & fretNumber(c)!=0:
-                #     fretCombo = fretFor(c) + str(fretNumber(c))
-                # else:
-                #     fretCombo = strings(c)
-                force = forceConvert(c)
-                noteToPlay = note(strings(c), fretNumber(c))
-                print ("~~ Note: %s" %(noteToPlay))
+        print ("Frets: ", fretCombo, end="\r\n")
+        if toStrum:
+            # if isfret(c) & fretNumber(c)!=0:
+            #     fretCombo = fretFor(c) + str(fretNumber(c))
+            # else:
+            #     fretCombo = strings(c)
 
-                print("Command is play ", play(noteToPlay, force))
+            notesToPlay = []
 
-                if event != "end":
-                    FNULL = open(os.devnull, 'w')
-                    retcode = Popen("play " + play(noteToPlay, force), shell=True, stdin=PIPE, stdout=FNULL, stderr=FNULL)
+            #frets being pressed
+            for f in fretsPressed:
+                notesToPlay.append(note(stringToStrum, f))
+            #just strings
+            if len(fretsPressed) == 0:
+                notesToPlay.append(note(stringToStrum, 0))
 
-            print("Contact ID %d, event=%s, mm coord: (%f, %f), force=%d, "
-                  "major=%f, minor=%f, orientation=%f" %
-                  (c.id, event, c.x_pos_mm, c.y_pos_mm, c.total_force,
-                   c.major_axis_mm, c.minor_axis_mm, c.orientation_degrees), end="\r\n")
 
-        if len(contacts) > 0:
-            print("****", end="\r\n");
+            for someNote in notesToPlay:
+                print ("Strumming: %s" %(stringToStrum), end="\r\n")
+                print ("Note To Play: %s" %(someNote), end="\r\n")
+                FNULL = open(os.devnull, 'w')
+                retcode = Popen("play " + play(someNote, force), shell=True, stdin=PIPE, stdout=PIPE, stderr=FNULL)
 
+        #     notesToPlay = []
+        # else :
+        #     continue
+
+
+                #print("Command is play ", play(noteToPlay, force))
+
+                # if event != "end":
+                #     FNULL = open(os.devnull, 'w')
+                #     retcode = Popen("play " + play(noteToPlay, force), shell=True, stdin=PIPE, stdout=FNULL, stderr=FNULL)
+
+                    #retcode = Popen("play " + play(noteToPlay, force), shell=True, stdin=PIPE, stdout=PIPE)
+
+            # print("Contact ID %d, event=%s, mm coord: (%f, %f), force=%d, "
+            #       "major=%f, minor=%f, orientation=%f" %
+            #       (c.id, event, c.x_pos_mm, c.y_pos_mm, c.total_force,
+            #        c.major_axis_mm, c.minor_axis_mm, c.orientation_degrees), end="\r\n")
     sensel_device.stopScanning();
     sensel_device.closeConnection();
     keyboardReadThreadStop()
