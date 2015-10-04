@@ -3,6 +3,8 @@ from keyboard_reader import *
 import sensel
 from subprocess import Popen, PIPE
 from guitar import *
+import os
+
 
 exit_requested = False;
 
@@ -56,19 +58,22 @@ def openSensorReadContacts():
             if isstring(c):
                 print("~~ String: %s" %(strings(c)), end="\r\n")
                 doProcessing = True
-            if isfret(c):
-                print("~~ Fret: %s%d" %(fretFor(c), fretNumber(c)), end="\r\n")
-                doProcessing = True
+            print("~~ Fret: For-%s Num-%d" %(fretFor(c), fretNumber(c)), end="\r\n")
+
             if doProcessing:
-                if isfret(c) & fretNumber(c)!=0:
-                    fretCombo = fretFor(c) + str(fretNumber(c))
-                else:
-                    fretCombo = strings(c)
+                # if isfret(c) & fretNumber(c)!=0:
+                #     fretCombo = fretFor(c) + str(fretNumber(c))
+                # else:
+                #     fretCombo = strings(c)
                 force = forceConvert(c)
-                print("Command is play ", play(fretCombo, force))
+                noteToPlay = note(strings(c), fretNumber(c))
+                print ("~~ Note: %s" %(noteToPlay))
+
+                print("Command is play ", play(noteToPlay, force))
 
                 if event != "end":
-                    Popen("play " + play(fretCombo, force), shell=True, stdin=PIPE, stdout=PIPE)
+                    FNULL = open(os.devnull, 'w')
+                    retcode = Popen("play " + play(noteToPlay, force), shell=True, stdin=PIPE, stdout=FNULL, stderr=FNULL)
 
             print("Contact ID %d, event=%s, mm coord: (%f, %f), force=%d, "
                   "major=%f, minor=%f, orientation=%f" %

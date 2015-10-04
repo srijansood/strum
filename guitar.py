@@ -1,3 +1,5 @@
+import json
+
 def isstring(c):
     return (15 <= c.y_pos_mm <= 60)
 
@@ -5,7 +7,7 @@ def isfret(c):
     return (71 <= c.y_pos_mm <= 116)
 
 def play(s, f):
-    return "\"|sox -n -p synth 1 pl " + s + "  vol " + str(f) + "\""
+    return "\"|sox -n -p synth 2 pl " + s + "  vol " + str(f) + "\""
 
 def strings(c):
     stringPlayed = ""
@@ -20,7 +22,7 @@ def strings(c):
     elif (45 <= c.y_pos_mm < 52.5):
         stringPlayed = "B"
     elif (52.5 <= c.y_pos_mm < 61):
-        stringPlayed = "E"
+        stringPlayed = "E2"
     else:
         stringPlayed = "none"
     return stringPlayed
@@ -105,3 +107,8 @@ def forceConvert(c):
     elif (c.total_force >= 3000):
         return 4.5
     return 1
+
+def note(string, fret):
+    with open('noteMap.json') as data_file:
+        data = json.load(data_file)
+    return data[string][str(fret)];
