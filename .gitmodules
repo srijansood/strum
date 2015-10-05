@@ -1,0 +1,3 @@
+[submodule "StrumApp"]
+	path = StrumApp
+	url = https://github.com/hahalima/StrumApp.git
