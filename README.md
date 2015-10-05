@@ -6,7 +6,7 @@ The [Sensel](http://www.sensel.com/) Morph is a "pressure-sensitive, multi-touch
 Morph raw data (x,y,force) -> string & fret data -> [SoX](http://sox.sourceforge.net/)
 <br>Uses Python.
 
-Devpost: http://devpost.com/software/strum
+Devpost: http://devpost.com/software/strum <br>
 Website: http://hahalima.github.io/StrumApp/
 
 Made at [VandyHacks 2015](http://www.vandyhacks.org/) without previous knowledge of how a guitar works!
